@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+EVENT="${1:-agent-turn-complete}"
+
+# Codex hooks write a JSON payload to stdin. Drain it before returning early so
+# Codex does not see EPIPE when the hook exits before the payload is written.
+if [ ! -t 0 ]; then
+  cat >/dev/null || true
+fi
+
+AGENT_INDICATOR_DIR="${TMUX_AGENT_INDICATOR_DIR:-}"
+if [ -z "$AGENT_INDICATOR_DIR" ] && command -v tmux >/dev/null 2>&1 && [ -n "${TMUX:-}" ]; then
+  AGENT_INDICATOR_DIR="$(tmux show-environment -g TMUX_AGENT_INDICATOR_DIR 2>/dev/null | sed 's/^[^=]*=//' || true)"
+fi
+AGENT_INDICATOR="${AGENT_INDICATOR_DIR:-$HOME/.tmux/plugins/tmux-agent-indicator}/adapters/codex-notify.sh"
+if [ -x "$AGENT_INDICATOR" ]; then
+  "$AGENT_INDICATOR" "$EVENT" >/dev/null 2>&1 || true
+fi
+
+case "$EVENT" in
+  start|session-start|turn-start|working|running)
+    exit 0
+    ;;
+  permission*|approve*|needs-input|input-required|ask-user)
+    SOUND="/System/Library/Sounds/Purr.aiff"
+    MESSAGE="Codex needs your attention"
+    ;;
+  agent-turn-complete|complete|done|stop|error|fail*)
+    SOUND="/System/Library/Sounds/Funk.aiff"
+    MESSAGE="Codex is done"
+    ;;
+  *)
+    SOUND="/System/Library/Sounds/Funk.aiff"
+    MESSAGE="Codex needs your attention"
+    ;;
+esac
+
+if command -v afplay >/dev/null 2>&1; then
+  afplay "$SOUND" >/dev/null 2>&1 || true
+fi
+
+if command -v osascript >/dev/null 2>&1; then
+  osascript -e "display notification \"$MESSAGE\" with title \"Codex\"" >/dev/null 2>&1 &
+else
+  printf '\a'
+fi

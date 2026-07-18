@@ -1,0 +1,13 @@
+ulimit -n 10240
+
+export EDITOR=nvim
+export COLORTERM=truecolor
+export CLAUDE_CODE_NO_FLICKER=1
+export PATH="$HOME/.local/bin:$PATH"
+[ -d "$HOME/go/bin" ] && export PATH="$HOME/go/bin:$PATH"
+
+# Suppress zoxide doctor warning (terminal shell integration injects hooks after zoxide)
+export _ZO_DOCTOR=0
+
+# Starship prompt
+command -v starship &>/dev/null && eval "$(starship init zsh)"

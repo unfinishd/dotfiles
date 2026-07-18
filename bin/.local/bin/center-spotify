@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Called by aerospace on-window-detected to center Spotify once on launch
+sleep 0.5
+osascript -e '
+use framework "AppKit"
+set screenFrame to current application'\''s NSScreen'\''s mainScreen()'\''s visibleFrame()
+set screenW to item 1 of item 2 of screenFrame
+set screenH to item 2 of item 2 of screenFrame
+set originY to item 2 of item 1 of screenFrame
+set winW to 1158
+set winH to 762
+tell application "System Events"
+  tell process "Spotify"
+    set size of window 1 to {winW, winH}
+    set position of window 1 to {((screenW - winW) / 2) as integer, (originY + (screenH - winH) / 2) as integer}
+  end tell
+end tell'

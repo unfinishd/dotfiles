@@ -1,0 +1,58 @@
+[core]
+	editor = nvim
+	preloadindex = true
+	deltabasecachelimit = 4g
+
+[pull]
+	rebase = true
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+	updateRefs = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	algorithm = histogram
+	mnemonicPrefix = true
+	renames = true
+
+[rerere]
+	enabled = true
+
+[branch]
+	sort = -committerdate
+
+[column]
+	ui = auto
+
+[feature]
+	manyfiles = true
+
+[alias]
+	s = status
+	co = checkout
+	cob = checkout -b
+	br = branch
+	sw = switch
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+	p = push
+	d = diff
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	last = log -1 HEAD
+	undo = reset --soft HEAD^
+	unstage = reset HEAD --
+
+[include]
+	path = ~/.gitconfig.local

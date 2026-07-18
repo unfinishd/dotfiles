@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Quick CPU and memory stats for tmux statusline with color thresholds.
+
+NORMAL="#868cad"
+WARN="#fffac2"
+CRIT="#d0679d"
+
+colorize() {
+    local value=$1
+    if ((value >= 80)); then
+        echo "$CRIT"
+    elif ((value >= 60)); then
+        echo "$WARN"
+    else
+        echo "$NORMAL"
+    fi
+}
+
+case "$(uname)" in
+    Darwin)
+        page_size=$(sysctl -n hw.pagesize)
+        mem_total=$(sysctl -n hw.memsize)
+        mem=$(vm_stat | awk -v ps="$page_size" -v total="$mem_total" '
+            /Pages active/ { active = $NF * ps }
+            /Pages wired/ { wired = $NF * ps }
+            /Pages occupied by compressor/ { compressed = $NF * ps }
+            END { printf "%.0f", 100 * (active + wired + compressed) / total }
+        ')
+        cpu=$(top -l 1 -n 0 2>/dev/null | awk '/CPU usage/ {
+            gsub(/%/, "")
+            printf "%.0f", $3 + $5
+        }')
+        ;;
+    *)
+        mem=$(awk '/MemTotal/{total=$2}/MemAvailable/{available=$2}END{printf "%.0f", (total-available)/total*100}' /proc/meminfo)
+        read -r _ user nice system idle _ < /proc/stat
+        total_before=$((user + nice + system + idle))
+        idle_before=$idle
+        sleep 0.3
+        read -r _ user nice system idle _ < /proc/stat
+        total_after=$((user + nice + system + idle))
+        idle_after=$idle
+        cpu=$((100 * (total_after - total_before - (idle_after - idle_before)) / (total_after - total_before)))
+        ;;
+esac
+
+cpu_color=$(colorize "$cpu")
+mem_color=$(colorize "$mem")
+
+echo "#[fg=${cpu_color}]${cpu}% CPU #[fg=${mem_color}]${mem}% MEM"

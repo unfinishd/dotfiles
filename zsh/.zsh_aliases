@@ -1,0 +1,35 @@
+# Navigation
+alias cd='z'
+alias dotfiles='z ~/dotfiles'
+
+# Git
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline -20'
+
+# eza
+alias ls='eza'
+alias ll='eza -l'
+alias la='eza -la'
+alias lt='eza --tree'
+alias l='eza -F'
+
+# bat
+alias cat='bat'
+
+# Agents
+alias cc='claude'
+cr() {
+  if [ -n "$1" ]; then
+    codex resume "$1"
+  else
+    codex resume
+  fi
+}
+ccr() {
+  if [ -n "$1" ]; then
+    claude --resume "$1"
+  else
+    claude --resume
+  fi
+}

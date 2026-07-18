@@ -1,0 +1,15 @@
+notify = ["/usr/bin/env", "codex-notify"]
+personality = "friendly"
+
+[tui]
+theme = "poimandres-storm"
+notifications = true
+status_line = ["model-with-reasoning", "thread-title", "current-dir", "git-branch", "branch-changes", "pull-request-number"]
+status_line_use_colors = true
+session_picker_view = "dense"
+
+[features]
+terminal_resize_reflow = true
+memories = true
+prevent_idle_sleep = true
+hooks = true
