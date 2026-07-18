@@ -1,3 +1,9 @@
+[include]
+	path = ~/.gitconfig.personal
+
+[include]
+	path = ~/.gitconfig.local
+
 [core]
 	editor = nvim
 	preloadindex = true
@@ -53,9 +59,3 @@
 	last = log -1 HEAD
 	undo = reset --soft HEAD^
 	unstage = reset HEAD --
-
-[include]
-	path = ~/.gitconfig.personal
-
-[include]
-	path = ~/.gitconfig.local
