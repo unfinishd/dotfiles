@@ -8,6 +8,14 @@
             "command": "codex-notify turn-start"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.local/bin/island-agent-hook\" ]; then ISLAND_HOOK_AGENT=codex ISLAND_HOOK_HOST_KIND=host \"$HOME/.local/bin/island-agent-hook\"; fi"
+          }
+        ]
       }
     ],
     "PermissionRequest": [
@@ -17,6 +25,44 @@
           {
             "type": "command",
             "command": "codex-notify permission-request"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.local/bin/island-agent-hook\" ]; then ISLAND_HOOK_AGENT=codex ISLAND_HOOK_HOST_KIND=host \"$HOME/.local/bin/island-agent-hook\"; fi"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.local/bin/island-agent-hook\" ]; then ISLAND_HOOK_AGENT=codex ISLAND_HOOK_HOST_KIND=host \"$HOME/.local/bin/island-agent-hook\"; fi"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.local/bin/island-agent-hook\" ]; then ISLAND_HOOK_AGENT=codex ISLAND_HOOK_HOST_KIND=host \"$HOME/.local/bin/island-agent-hook\"; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.local/bin/island-agent-hook\" ]; then ISLAND_HOOK_AGENT=codex ISLAND_HOOK_HOST_KIND=host \"$HOME/.local/bin/island-agent-hook\"; fi"
           }
         ]
       }

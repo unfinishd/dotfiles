@@ -1,5 +1,9 @@
+model = "gpt-5.6-terra"
+model_reasoning_effort = "xhigh"
+
 notify = ["/usr/bin/env", "codex-notify"]
 personality = "friendly"
+approvals_reviewer = "auto_review"
 
 [tui]
 theme = "poimandres-storm"
@@ -13,3 +17,8 @@ terminal_resize_reflow = true
 memories = true
 prevent_idle_sleep = true
 hooks = true
+goals = true
+
+[memories]
+use_memories = true
+generate_memories = true
