@@ -20,7 +20,22 @@ Zoxide history is created locally and is never stored in this repository.
 
 - `~/.config/dotfiles/local.zsh` is sourced by zsh when present.
 - `~/.config/tmux/local.conf` is sourced by tmux when present.
+- `~/.gitconfig.personal` can hold a private Git identity.
 - `~/.gitconfig.local` is loaded by Git when present.
+
+## Git identity
+
+The base Git config is symlinked into this checkout. Keep your account identity
+in the private `~/.gitconfig.personal` file rather than using `git config
+--global`, which would modify the checkout. Configure it once with:
+
+```sh
+git config --file ~/.gitconfig.personal user.name "Your Name"
+git config --file ~/.gitconfig.personal user.email "you@example.com"
+```
+
+Employer overlays load after this file and can conditionally override the
+identity for work repositories.
 
 ## Packages
 

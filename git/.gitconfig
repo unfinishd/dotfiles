@@ -55,4 +55,7 @@
 	unstage = reset HEAD --
 
 [include]
+	path = ~/.gitconfig.personal
+
+[include]
 	path = ~/.gitconfig.local
