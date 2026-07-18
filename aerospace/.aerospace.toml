@@ -142,6 +142,7 @@ on-mode-changed = []
     alt-s = 'workspace S'
     alt-t = 'workspace T'
     alt-u = 'workspace U'
+    alt-v = 'exec-and-forget ~/.local/bin/toggle-spotify'
     alt-w = 'workspace W'
     alt-x = 'workspace X'
     alt-y = 'workspace Y'
@@ -216,7 +217,7 @@ run= ["move-node-to-workspace F"]
 if.app-id="us.zoom.xos"
 run= ["move-node-to-workspace F"]
 
-# Spotify: own workspace V
+# Spotify: own workspace V, toggle with alt-v
 [[on-window-detected]]
 if.app-id="com.spotify.client"
 run= ["layout floating", "move-node-to-workspace V", "exec-and-forget ~/.local/bin/center-spotify"]

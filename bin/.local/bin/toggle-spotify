@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_NAME="Spotify"
+SPOTIFY_WS="V"
+A=/opt/homebrew/bin/aerospace
+CURRENT_WORKSPACE=$($A list-workspaces --focused)
+
+main() {
+  if ! pgrep -xq "$APP_NAME"; then
+    open -a "$APP_NAME"
+    exit 0
+  fi
+
+  if [ "$CURRENT_WORKSPACE" = "$SPOTIFY_WS" ]; then
+    $A workspace-back-and-forth
+  else
+    $A workspace "$SPOTIFY_WS"
+  fi
+}
+
+main
