@@ -13,6 +13,53 @@ hascmd() {
   command -v "$1" >/dev/null 2>&1
 }
 
+setup_shared_skills() {
+  local target_dir="$1"
+  local source_dir="$DOTFILES_DIR/agents/skills"
+  local skill_dir skill_name target
+
+  [ -d "$source_dir" ] || return
+
+  mkdir -p "$target_dir"
+  for skill_dir in "$source_dir"/*; do
+    [ -d "$skill_dir" ] || continue
+
+    skill_name="$(basename "$skill_dir")"
+    target="$target_dir/$skill_name"
+
+    if [ -L "$target" ]; then
+      if [ "$(readlink "$target")" = "$skill_dir" ]; then
+        continue
+      fi
+
+      rm "$target"
+    elif [ -e "$target" ]; then
+      continue
+    fi
+
+    ln -s "$skill_dir" "$target"
+  done
+}
+
+remove_shared_skills() {
+  local target_dir="$1"
+  local source_dir="$DOTFILES_DIR/agents/skills"
+  local skill_dir skill_name target
+
+  [ -d "$source_dir" ] || return
+
+  for skill_dir in "$source_dir"/*; do
+    [ -d "$skill_dir" ] || continue
+
+    skill_name="$(basename "$skill_dir")"
+    target="$target_dir/$skill_name"
+
+    if [ -L "$target" ] && [ "$(readlink "$target")" = "$skill_dir" ]; then
+      rm "$target"
+    fi
+  done
+}
+
 install_tpm() {
   local tpm_dir="$HOME/.tmux/plugins/tpm"
 
@@ -58,7 +105,7 @@ stow_package() {
   if [ "${DOTFILES_SKIP_STOW_CONFIGS:-0}" = "1" ]; then
     case "$package" in
       claude) args+=(--ignore='^\.claude/settings\.json$') ;;
-      codex) args+=(--ignore='^\.codex/(config\.toml|hooks\.json)$') ;;
+      codex) args+=(--ignore='^\.codex/(AGENTS\.md|config\.toml|hooks\.json)$') ;;
       git) args+=(--ignore='^\.gitconfig\.personal$') ;;
     esac
   fi
@@ -75,6 +122,10 @@ case "${1:-}" in
     for package in "${PACKAGES[@]}"; do
       stow_package "$package" --delete
     done
+    if [ "${DOTFILES_SKIP_SKILLS:-0}" != "1" ]; then
+      remove_shared_skills "$HOME/.agents/skills"
+      remove_shared_skills "$HOME/.claude/skills"
+    fi
     exit 0
     ;;
   "")
@@ -88,6 +139,11 @@ esac
 for package in "${PACKAGES[@]}"; do
   stow_package "$package"
 done
+
+if [ "${DOTFILES_SKIP_SKILLS:-0}" != "1" ]; then
+  setup_shared_skills "$HOME/.agents/skills"
+  setup_shared_skills "$HOME/.claude/skills"
+fi
 
 install_tpm
 install_starship
